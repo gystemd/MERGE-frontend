@@ -3,27 +3,26 @@ import logo from './logo.svg';
 import './App.css';
 import { MascaApi, enableMasca, Result, QueryCredentialsRequestResult } from '@blockchain-lab-um/masca-connector';
 
+const url = 'http://localhost:3001/send';
+const accounts = await (window as any).ethereum.request({
+  method: 'eth_requestAccounts',
+});
+const address = accounts[0];
+let api: MascaApi;
+const enableResult = await enableMasca(address, {
+  snapId: 'npm:@blockchain-lab-um/masca', // Defaults to `npm:@blockchain-lab-um/masca`
+  version: '1.0.0', // Defaults to the latest released version
+  supportedMethods: ['did:ethr'], // Defaults to all available methods
+});
+
+if (enableResult.success)
+  api = await enableResult.data.getMascaApi();
+
 function App() {
-  const [buttonClicked, setButtonClicked] = useState(false);
-  const [button2Clicked, setButton2Clicked] = useState(false);
 
   async function request() {
 
-    const url = 'http://localhost:3001/send';
-
-    const accounts = await (window as any).ethereum.request({
-      method: 'eth_requestAccounts',
-    });
-    const address = accounts[0];
-
-    const enableResult = await enableMasca(address, {
-      snapId: 'npm:@blockchain-lab-um/masca', // Defaults to `npm:@blockchain-lab-um/masca`
-      version: '1.0.0', // Defaults to the latest released version
-      supportedMethods: ['did:ethr'], // Defaults to all available methods
-    });
-
     if (enableResult.success) {
-      const api: MascaApi = await enableResult.data.getMascaApi();
       const query: string = '$[?(@.data.credentialSubject.achievement == "Certified Solidity Developer 2")]';
 
       const result: Result<QueryCredentialsRequestResult[]> = await api.queryCredentials({
@@ -69,30 +68,12 @@ function App() {
     }
   }
 
-  function request2() {
-    const url = 'http://localhost:3001/test';
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <button onClick={request}>Resource 1</button>
-        {buttonClicked && <p>You clicked the button!</p>}
-        <button onClick={request2}>Resource 2</button>
       </header>
     </div>
   );
