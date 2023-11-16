@@ -15,30 +15,32 @@ if (enableResult.success)
   api = await enableResult.data.getMascaApi();
 // type newDictionary = Record<string, [Record<string, { attribute: string, dataType: string, value:string }>]>;
 
-type attributesDictionary = Record<string, Record<string, { attribute: string, dataType: string, value: string }[]>>;
-const attributes: attributesDictionary =
+type attributesList = Record<string, Record<string, { attribute: string, dataType: string, value: string }[]>>;
+type resourcesList = Record<string, attributesList>;
+
+const resources: resourcesList =
 {
-  "https://beta.api.schemas.serto.id/v1/public/program-completion-certificate/1.0/json-schema.json":
-  {
-    "#1": [{
-      attribute: "credentialSubject.achievement",
-      dataType: "http://www.w3.org/2001/XMLSchema#string",
-      value: "Certified Solidity Developer 2"
-    }],
-    "#2": [{
-      attribute: "credentialSubject.achievement",
-      dataType: "http://www.w3.org/2001/XMLSchema#string",
-      value: "Certified Java Developer"
+  "research-paper-computer-science": {
+    "https://www.npoint.io/docs/b7e2e485241a04f89fdc":
+    {
+      "#1": [{
+        attribute: "credentialSubject.degreeLevel",
+        dataType: "http://www.w3.org/2001/XMLSchema#string",
+        value: "PhD"
+      }, {
+        attribute: "credentialSubject.degreeField",
+        dataType: "http://www.w3.org/2001/XMLSchema#string",
+        value: "Computer Science"
+      }]
     }
-    ]
   }
 };
 
-function buildQueries(dictionary: attributesDictionary) {
+function buildQueries(resource: string) {
   const queryList: string[] = [];
-
-  Object.keys(dictionary).forEach((CategoryKey) => {
-    const category = dictionary[CategoryKey];
+  const resourceAttributes: attributesList = resources[resource];
+  Object.keys(resourceAttributes).forEach((CategoryKey) => {
+    const category = resourceAttributes[CategoryKey];
 
     Object.keys(category).forEach((credentialKey) => {
       let query = '$[?(';
@@ -72,11 +74,11 @@ async function mascaRequest(query: string) {
 
 function App() {
 
-  async function request() {
+  async function request(resource: string) {
 
     if (enableResult.success) {
       const vcList: (QueryCredentialsRequestResult)[] = [];
-      const queryList = buildQueries(attributes);
+      const queryList = buildQueries(resource);
 
       for (const query of queryList) {
         const result = await mascaRequest(query);
@@ -90,9 +92,9 @@ function App() {
       });
 
       if (vp.success) {
-        const request = { vp: vp.data }
+        const request = { vp: vp.data, resource: resource }
         console.log(request);
-        fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json' }, body: JSON.stringify(request) })
+        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) })
           .then(response => response.json())
           .then(data => { console.log(data); })
           .catch(error => { console.error(error); });
@@ -106,7 +108,11 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={request}>Resource 1</button>
+        {Object.keys(resources).map(key => (
+          <button onClick={() => request(key)} key={key}>
+            {key}
+          </button>
+        ))}
       </header>
     </div>
   );
