@@ -8,7 +8,7 @@ const accounts = await (window as any).ethereum.request({ method: 'eth_requestAc
 const address = accounts[0];
 let api: MascaApi;
 const enableResult = await enableMasca(address, {
-  snapId: 'npm:@blockchain-lab-um/masca', version: '1.0.0', supportedMethods: ['did:ethr'],
+  snapId: 'npm:@blockchain-lab-um/masca', version: '1.1.0', supportedMethods: ['did:ethr'],
 });
 
 if (enableResult.success)
@@ -91,7 +91,8 @@ function App() {
 
       if (vp.success) {
         const request = { vp: vp.data }
-        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) })
+        console.log(request);
+        fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json' }, body: JSON.stringify(request) })
           .then(response => response.json())
           .then(data => { console.log(data); })
           .catch(error => { console.error(error); });
