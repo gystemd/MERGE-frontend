@@ -1,0 +1,18 @@
+
+{
+  "type": [
+    "VerifiableCredential",
+    "MascaUserCredential"
+  ],
+  "credentialSubject": {
+    "id": "did:ethr:0x13881:0x5f572a3A7a950f7a3772652aF288F308FA8fc658",
+    "vaccineType" : "Full"
+  },
+  "credentialSchema": {
+    "id": "https://api.npoint.io/292a45521e356ed0174b",
+    "type": "JsonSchemaValidator2018"
+  },
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ]
+}

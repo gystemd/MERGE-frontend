@@ -1,0 +1,18 @@
+{
+  "type": [
+    "VerifiableCredential",
+    "MascaUserCredential"
+  ],
+  "credentialSubject": {
+    "id": "did:ethr:0x13881:0x5f572a3A7a950f7a3772652aF288F308FA8fc658",
+    "degreeLevel": "PhD",
+    "degreeField": "Computer Science"
+  },
+  "credentialSchema": {
+    "id": "https://api.npoint.io/92e56cd3a26b31bfcd14",
+    "type": "JsonSchemaValidator2018"
+  },
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ]
+}
