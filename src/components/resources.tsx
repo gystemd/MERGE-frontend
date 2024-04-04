@@ -6,16 +6,21 @@ import { resources } from '../db/db';
 
 function Resources() {
     return (
-        <div className="card-group">
-            {Object.keys(resources).map(key => (
-                <div className="card">
-                    <div className="card-body">
-                        <h5 className="card-title">{key}</h5>
-                        <Link to={`/form?key=${key}`} className="btn btn-primary">Request</Link>
-                        {/* <button onClick={() => request(key)} className="btn btn-primary">Request</button> */}
-                    </div>
+        <div className="bg-dark text-white min-vh-100">
+            <div className="container" style={{ maxWidth: '600px' }}>
+
+            <center><h1>List of resources</h1></center>
+                <div className="list-group">
+                    {Object.keys(resources).map(key => (
+                        <div className="list-group-item">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h5 className="mb-2">{key}</h5>
+                                <Link to={`/form?key=${key}`} className="btn btn-primary">Access</Link>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            ))}
+            </div>
         </div>
     );
 }
